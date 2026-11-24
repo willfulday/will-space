@@ -1,0 +1,34 @@
+// 接口调试请求清单
+// 用法：点击每个 ### 请求块上方的 "Send Request"，响应在右侧面板展示
+// 默认全部指向 httpbin.org 演练地址，零风险、无需任何 SAP 权限
+
+@mockHost = https://httpbin.org
+
+### 1. 测试公开的健康检查 / 模拟接口
+GET {{mockHost}}/get HTTP/1.1
+User-Agent: VSCode-SAP-Client
+
+### 2. 模拟 SAP OData 发票查询请求（示例）
+# 实际项目中只需替换为你本地 S/4HANA 的真实 OData 地址与凭证
+GET {{mockHost}}/json HTTP/1.1
+Authorization: Bearer mock_token_for_s4hana
+Accept: application/json
+
+### 3. 模拟电子发票 XML 提交 POST 请求
+POST {{mockHost}}/post HTTP/1.1
+Content-Type: application/json
+
+{
+  "companyCode": "IT99",
+  "documentType": "TD02",
+  "amount": 2500.00,
+  "currency": "EUR"
+}
+
+### 4. 模板：真实 S/4HANA OData 发票抬头查询（默认不执行，替换后再发）
+# 提示：主机名建议放在环境变量里，凭证不要写进仓库
+# @s4Host = https://<your-s4-host>:44300
+# @s4Client = 100
+# GET {{s4Host}}/sap/opu/odata/sap/API_BILLING_DOCUMENT_SRV/A_BillingDocument?$top=5&sap-client={{s4Client}}
+# Authorization: Basic <base64(user:password)>
+# Accept: application/json
